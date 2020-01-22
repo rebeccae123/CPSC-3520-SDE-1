@@ -1,0 +1,45 @@
+(**
+    Rebecca Edson
+    CPSC 3520 Summer Session II
+    SDE 1
+    July 16, 2019
+*)
+
+let rec printNum = function(f) ->
+  match f with
+    [] -> "\n"
+    | a::b -> string_of_float(a) ^ " " ^ printNum(b);;
+
+let rec printSeparate = function(l) ->
+  match l with
+    [] -> "\x00"
+    | a::b -> printNum(a) ^ printSeparate(b);;
+
+let printList = function(listOfLists) ->
+  print_string(printSeparate(listOfLists));;
+
+let rec theClass = function(aVect) ->
+  if(List.length(aVect) > 1) then theClass(List.tl(aVect))
+      else List.hd(aVect);;
+
+let square = function(x) -> x *. x;;
+
+let distance = function(a, b) -> square(a -. b);;
+
+let rec distanceR2 = function(v1, v2) ->
+  if (List.length(v1) > 1) then
+    distance(List.hd(v1), List.hd(v2)) +. distanceR2(List.tl(v1), List.tl(v2))
+        else 0.;;
+
+let rec distanceAllVectors2 = function(v, vset) ->
+  if (vset == []) then []
+      else distanceR2(v, List.hd(vset))::distanceAllVectors2(v, List.tl(vset));;
+
+let rec minDistance = function(t, s, min) ->
+  if (s == []) then min
+      else if (distanceR2(t, List.hd(s)) < distanceR2(t, min)) then
+        minDistance(t, List.tl(s), List.hd(s))
+            else minDistance(t, List.tl(s), min);;
+
+let nnr1 = function(test, h) ->
+  theClass(minDistance(test, h, List.hd(h)));;
